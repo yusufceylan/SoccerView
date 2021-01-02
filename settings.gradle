@@ -1,2 +1,3 @@
+include ':soccerview'
 include ':app'
 rootProject.name = "SoccerView"

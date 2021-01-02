@@ -6,10 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+    <com.ysfcyln.soccerview.SoccerView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:sv_grass_row_number="8"
+        app:sv_grass_color_light="@android:color/holo_green_light"
+        app:sv_grass_color_dark="@android:color/holo_green_dark"
+        app:sv_line_color="@android:color/white"
+        app:sv_line_size="4dp"
+        app:sv_padding="16dp"
+        app:sv_goal_post_height="24dp"
+        app:sv_goal_post_width="32dp"
+        app:sv_goal_area_height="64dp"
+        app:sv_goal_area_width="104dp"
+        app:sv_corner_radius="12dp"
+        app:sv_center_outer_circle_radius="24dp"
+        app:sv_center_inner_circle_radius="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
