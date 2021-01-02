@@ -6,33 +6,111 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 
-
+/**
+ * Simple Soccer View
+ */
 class SoccerView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    //region vars
-    companion object {
-        const val NUM_OF_GRASS_ROWS = 8
-    }
-
-    private val grassColor1 =
+    //region Default Values
+    private val defaultGrassColorLight =
         ResourcesCompat.getColor(context.resources, android.R.color.holo_green_light, context.theme)
-    private val grassColor2 =
+    private val defaultGrassColorDark =
         ResourcesCompat.getColor(context.resources, android.R.color.holo_green_dark, context.theme)
+    private val defaultLineColor =
+        ResourcesCompat.getColor(context.resources, android.R.color.white, context.theme)
 
-    private val defaultPadding = 16.ToPx
-    private val halfInnerGoalWidth = 16.ToPx
-    private val halfInnerGoalHeight = 12.ToPx
-    private val halfGoalWidth = 52.ToPx
-    private val halfGoalHeight = 32.ToPx
-    private val cornerSizeRadius = 12.ToPx
-    private val centerOuterCircleRadius = 24.ToPx
-    private val centerInnerCircleRadius = 6.ToPx
+    private val defaultNumberOfGrassRows = 8
+    private val defaultLineSize = 4.ToPx
+    private val defaultGeneralPadding = 16.ToPx
+    private val defaultHalfInnerGoalWidth = 16.ToPx
+    private val defaultHalfInnerGoalHeight = 12.ToPx
+    private val defaultHalfGoalWidth = 52.ToPx
+    private val defaultHalfGoalHeight = 32.ToPx
+    private val defaultCornerSizeRadius = 12.ToPx
+    private val defaultCenterOuterCircleRadius = 24.ToPx
+    private val defaultCenterInnerCircleRadius = 6.ToPx
+    //endregion
+
+    //region Dynamic Attrs
+    private var grassColorLight : Int
+    private var grassColorDark : Int
+    private var lineColor : Int
+    private var numOfGrassRows : Int
+    private var lineSize : Int
+    private var defaultPadding : Int
+    private var halfInnerGoalWidth : Int
+    private var halfInnerGoalHeight : Int
+    private var halfGoalWidth : Int
+    private var halfGoalHeight : Int
+    private var cornerSizeRadius : Int
+    private var centerOuterCircleRadius : Int
+    private var centerInnerCircleRadius : Int
     //endregion
 
     init {
-        // do something here
+        // Get Attributes
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SoccerView)
+        // Get Grass Row Count
+        numOfGrassRows = typedArray.getInt(R.styleable.SoccerView_sv_grass_row_number, defaultNumberOfGrassRows)
+        // Get Grass Colors
+        grassColorLight = typedArray.getColor(
+            R.styleable.SoccerView_sv_grass_color_light,
+            defaultGrassColorLight
+        )
+        grassColorDark = typedArray.getColor(
+            R.styleable.SoccerView_sv_grass_color_dark,
+            defaultGrassColorDark
+        )
+        // Get Border color and size
+        lineColor = typedArray.getColor(
+            R.styleable.SoccerView_sv_line_color,
+            defaultLineColor
+        )
+        lineSize = typedArray.getDimensionPixelSize(
+            R.styleable.SoccerView_sv_line_size,
+            defaultLineSize
+        )
+        // Get default general padding
+        defaultPadding = typedArray.getDimensionPixelSize(
+            R.styleable.SoccerView_sv_padding,
+            defaultGeneralPadding
+        )
+        // Get Goal Post Sizes
+        halfInnerGoalWidth = typedArray.getDimensionPixelSize(
+            R.styleable.SoccerView_sv_goal_post_width,
+            defaultHalfInnerGoalWidth * 2
+        ) / 2
+        halfInnerGoalHeight = typedArray.getDimensionPixelSize(
+            R.styleable.SoccerView_sv_goal_post_height,
+            defaultHalfInnerGoalHeight * 2
+        ) / 2
+        // Get Goal Area Sizes
+        halfGoalWidth = typedArray.getDimensionPixelSize(
+            R.styleable.SoccerView_sv_goal_area_width,
+            defaultHalfGoalWidth * 2
+        ) / 2
+        halfGoalHeight = typedArray.getDimensionPixelSize(
+            R.styleable.SoccerView_sv_goal_area_height,
+            defaultHalfGoalHeight * 2
+        ) / 2
+        // Corner size radius
+        cornerSizeRadius = typedArray.getDimensionPixelSize(
+            R.styleable.SoccerView_sv_corner_radius,
+            defaultCornerSizeRadius
+        )
+        // Center Circle Radius
+        centerOuterCircleRadius = typedArray.getDimensionPixelSize(
+            R.styleable.SoccerView_sv_center_outer_circle_radius,
+            defaultCenterOuterCircleRadius
+        )
+        centerInnerCircleRadius = typedArray.getDimensionPixelSize(
+            R.styleable.SoccerView_sv_center_inner_circle_radius,
+            defaultCenterInnerCircleRadius
+        )
+        // Recycle
+        typedArray.recycle()
     }
 
     //region Grass View
@@ -52,10 +130,10 @@ class SoccerView @JvmOverloads constructor(
         // Create a paint object
         val grassPaint = createGrassPaint()
         // Calculate single row height
-        val rowHeight = height / NUM_OF_GRASS_ROWS
+        val rowHeight = height / numOfGrassRows
         // Use Canvas to draw views
         canvas?.apply {
-            for (i in 0..NUM_OF_GRASS_ROWS) {
+            for (i in 0..numOfGrassRows) {
                 // Top value of each row
                 val top = i * rowHeight
                 // Create Rect for Grass Row
@@ -63,7 +141,7 @@ class SoccerView @JvmOverloads constructor(
                 // Set values of each Rect Object which corresponds to a Grass Row
                 rect.set(0, top, width, top + rowHeight)
                 // Set paint color
-                grassPaint.color = if (i % 2 == 0) grassColor1 else grassColor2
+                grassPaint.color = if (i % 2 == 0) grassColorLight else grassColorDark
                 // Draw on the Canvas
                 drawRect(rect, grassPaint)
             }
@@ -78,12 +156,8 @@ class SoccerView @JvmOverloads constructor(
     private fun createLinePaint() : Paint {
         return Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
-            strokeWidth = 4.ToPx.toFloat()
-            color = ResourcesCompat.getColor(
-                context.resources,
-                android.R.color.white,
-                context.theme
-            )
+            strokeWidth = lineSize.toFloat()
+            color = lineColor
         }
     }
 
@@ -352,11 +426,7 @@ class SoccerView @JvmOverloads constructor(
         // Get Line Paint
         val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.FILL
-            color =  ResourcesCompat.getColor(
-                context.resources,
-                android.R.color.white,
-                context.theme
-            )
+            color = lineColor
         }
         // Use Canvas to draw views
         canvas?.apply {

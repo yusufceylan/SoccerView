@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SoccerView">
+        <attr name="sv_grass_row_number" format="integer"/>
+        <attr name="sv_grass_color_light" format="color"/>
+        <attr name="sv_grass_color_dark" format="color"/>
+        <attr name="sv_line_color" format="color"/>
+        <attr name="sv_line_size" format="dimension"/>
+        <attr name="sv_padding" format="dimension"/>
+        <attr name="sv_goal_post_width" format="dimension"/>
+        <attr name="sv_goal_post_height" format="dimension"/>
+        <attr name="sv_goal_area_width" format="dimension"/>
+        <attr name="sv_goal_area_height" format="dimension"/>
+        <attr name="sv_corner_radius" format="dimension"/>
+        <attr name="sv_center_outer_circle_radius" format="dimension"/>
+        <attr name="sv_center_inner_circle_radius" format="dimension"/>
+    </declare-styleable>
+</resources>
